@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 // import { ai } from "../generate-course-layout/route";
 import axios from "axios";
 import { db } from "@/config/db";
+import {
+    GoogleGenAI,
+} from '@google/genai';
 import { coursesTable } from "@/config/schema";
 import { eq } from "drizzle-orm";
 
