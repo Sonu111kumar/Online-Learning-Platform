@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ai } from "../generate-course-layout/route";
+// import { ai } from "../generate-course-layout/route";
 import axios from "axios";
 import { db } from "@/config/db";
 import { coursesTable } from "@/config/schema";
@@ -16,7 +16,7 @@ content:<>
 }
 : User Input:
 `
- const ai = new GoogleGenAI({
+ const geminiAI = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
 });
 
@@ -39,7 +39,7 @@ export async function POST(req) {
             },
         ];
 
-        const response = await ai.models.generateContent({
+        const response = await geminiAI.models.generateContent({
             model,
             config,
             contents,
