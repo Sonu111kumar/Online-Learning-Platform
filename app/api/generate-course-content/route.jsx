@@ -16,6 +16,10 @@ content:<>
 }
 : User Input:
 `
+ const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+});
+
 export async function POST(req) {
     const { courseJson, courseTitle, courseId } = await req.json();
 
