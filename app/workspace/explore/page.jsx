@@ -8,23 +8,41 @@ import React, { useEffect, useState } from 'react'
 import CourseCard from '../_components/CourseCard';
 import { Skeleton } from '@/components/ui/skeleton';
 
+import { toast } from 'sonner';
+
 function Explore() {
     const [courseList, setCourseList] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const { user } = useUser();
     useEffect(() => {
         user && GetCourseList();
     }, [user])
-    const GetCourseList = async () => {
-        const result = await axios.get('/api/courses?courseId=0');
+    const GetCourseList = async (query = '') => {
+        try{
+        const result = await axios.get(`/api/courses?courseId=0&search=${query}`);
         console.log(result.data);
-        setCourseList(result.data)
+        setCourseList(result.data);
+         } catch (err) {
+        if (err.response?.status === 404) {
+       toast.error("No courses found");
+       setCourseList([]); // clear existing
+         } else {
+        toast.error("Something went wrong");
+        }
+}
+
     }
+    const handleSearch = () => {
+    GetCourseList(searchTerm);
+    };
     return (
         <div>
             <h2 className='font-bold text-3xl mb-6'>Explore More Courses</h2>
             <div className='flex gap-5 max-w-md' >
-                <Input placeholder="Search" />
-                <Button> <Search /> Search </Button>
+                <Input placeholder="Search" 
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}/>
+                <Button onClick={handleSearch}> <Search className='mr-2' /> Search </Button>
             </div>
 
 
@@ -37,6 +55,7 @@ function Explore() {
                         <Skeleton key={index} className='w-full h-[240px]' />
                     ))
                 }
+                {courseList.length === 0 && <p className="text-gray-500 mt-4">No courses found.</p>}
             </div>
         </div>
     )
